@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  # Renamed the service for clarity, but you can keep the old name if you prefer.
+  reef-spec-builder:
+    image: anukulpandey/reef-chain-node
+    # This command uses the same binary to generate the chain specification file
+    command: ["build-spec", "--chain", "testnet-new", "--disable-default-bootnode"]
+    # We will mount a volume to get the output file out of the container
+    volumes:
+      - ./output:/tmp
+    restart: "no"
