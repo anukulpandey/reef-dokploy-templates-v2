@@ -30,40 +30,41 @@ echo
 echo "[2/9] Cleaning up previous chain data..."
 
 rm -rf \
-  /tmp/validator1 \
-  /tmp/validator2 \
-  /tmp/validator3 \
-  /tmp/bootnode \
-  /tmp/validator1.txt \
-  /tmp/validator2.txt \
-  /tmp/validator3.txt \
-  /tmp/v1_seed.txt \
-  /tmp/v2_seed.txt \
-  /tmp/v3_seed.txt \
-  /tmp/v1_addr.txt \
-  /tmp/v2_addr.txt \
-  /tmp/v3_addr.txt \
-  /tmp/bootnode_peer_id.txt \
-  /tmp/bootnode_node_key.txt \
-  /tmp/v1_node_key.txt \
-  /tmp/v2_node_key.txt \
-  /tmp/v3_node_key.txt \
-  /tmp/local-chain-spec.json \
-  /tmp/local-chain-spec-updated.json \
-  /tmp/local-chain-spec-raw-2.json || true
+  ./output/validator1 \
+  ./output/validator2 \
+  ./output/validator3 \
+  ./output/bootnode \
+  ./output/validator1.txt \
+  ./output/validator2.txt \
+  ./output/validator3.txt \
+  ./output/v1_seed.txt \
+  ./output/v2_seed.txt \
+  ./output/v3_seed.txt \
+  ./output/v1_addr.txt \
+  ./output/v2_addr.txt \
+  ./output/v3_addr.txt \
+  ./output/bootnode_peer_id.txt \
+  ./output/bootnode_node_key.txt \
+  ./output/v1_node_key.txt \
+  ./output/v2_node_key.txt \
+  ./output/v3_node_key.txt \
+  ./output/local-chain-spec.json \
+  ./output/local-chain-spec-updated.json \
+  ./output/local-chain-spec-raw-2.json || true
 
 echo
 
 echo
 echo "[3/9] Generating random node keys..."
+mkdir -p ./output
 
-"$NODE_BIN" key generate-node-key --chain local > /tmp/bootnode_node_key.txt
+"$NODE_BIN" key generate-node-key --chain local > ./output/bootnode_node_key.txt
 
 echo
 echo "[4/9] Generating and updating chain spec..."
 
 # Base chain spec
-"$NODE_BIN" build-spec --chain testnet-new --disable-default-bootnode > /tmp/local-chain-spec.json
+"$NODE_BIN" build-spec --chain testnet-new --disable-default-bootnode > ./output/local-chain-spec.json
 
 # Extract validator seeds and addresses
 V1_SEED=0x4beb11e380012110b0b072fbb3d8e7455921cf4658de06c33d970be82ccf9ed5
@@ -104,13 +105,13 @@ echo "V2 BABE: $V2_BABE, GRAN: $V2_GRAN, IMON: $V2_IMON, AUDI: $V2_AUDI"
 echo "V3 BABE: $V3_BABE, GRAN: $V3_GRAN, IMON: $V3_IMON, AUDI: $V3_AUDI"
 
 # Save seeds and addresses
-echo "$V1_SEED" > /tmp/v1_seed.txt
-echo "$V2_SEED" > /tmp/v2_seed.txt
-echo "$V3_SEED" > /tmp/v3_seed.txt
+echo "$V1_SEED" > ./output/v1_seed.txt
+echo "$V2_SEED" > ./output/v2_seed.txt
+echo "$V3_SEED" > ./output/v3_seed.txt
 
-echo "$V1_ADDR" > /tmp/v1_addr.txt
-echo "$V2_ADDR" > /tmp/v2_addr.txt
-echo "$V3_ADDR" > /tmp/v3_addr.txt
+echo "$V1_ADDR" > ./output/v1_addr.txt
+echo "$V2_ADDR" > ./output/v2_addr.txt
+echo "$V3_ADDR" > ./output/v3_addr.txt
 
 echo $V1_SEED
 echo $V2_SEED
@@ -122,35 +123,35 @@ echo $V3_ADDR
 
 echo "Updating chain spec with balances, session keys, and staking..."
 
-jq ".genesis.runtimeGenesis.patch.balances.balances += [[\"$V1_ADDR\", 100000000000000000000000000], [\"$V2_ADDR\", 100000000000000000000000000], [\"$V3_ADDR\", 100000000000000000000000000]]" /tmp/local-chain-spec.json | \
+jq ".genesis.runtimeGenesis.patch.balances.balances += [[\"$V1_ADDR\", 100000000000000000000000000], [\"$V2_ADDR\", 100000000000000000000000000], [\"$V3_ADDR\", 100000000000000000000000000]]" ./output/local-chain-spec.json | \
 jq ".genesis.runtimeGenesis.patch.session.keys = [[\"$V1_ADDR\", \"$V1_ADDR\", {\"authority_discovery\": \"$V1_AUDI\", \"babe\": \"$V1_BABE\", \"grandpa\": \"$V1_GRAN\", \"im_online\": \"$V1_IMON\"}], [\"$V2_ADDR\", \"$V2_ADDR\", {\"authority_discovery\": \"$V2_AUDI\", \"babe\": \"$V2_BABE\", \"grandpa\": \"$V2_GRAN\", \"im_online\": \"$V2_IMON\"}], [\"$V3_ADDR\", \"$V3_ADDR\", {\"authority_discovery\": \"$V3_AUDI\", \"babe\": \"$V3_BABE\", \"grandpa\": \"$V3_GRAN\", \"im_online\": \"$V3_IMON\"}]]" | \
 jq ".genesis.runtimeGenesis.patch.staking.invulnerables = [\"$V1_ADDR\", \"$V2_ADDR\", \"$V3_ADDR\"]" | \
 jq ".genesis.runtimeGenesis.patch.staking.stakers = [[\"$V1_ADDR\", \"$V1_ADDR\", 1000000000000000000000000, \"Validator\"], [\"$V2_ADDR\", \"$V2_ADDR\", 1000000000000000000000000, \"Validator\"], [\"$V3_ADDR\", \"$V3_ADDR\", 1000000000000000000000000, \"Validator\"]]" \
-> /tmp/local-chain-spec-updated.json
+> ./output/local-chain-spec-updated.json
 
 # Raw spec
-"$NODE_BIN" build-spec --chain /tmp/local-chain-spec-updated.json --disable-default-bootnode --raw > /tmp/local-chain-spec-raw-2.json
+"$NODE_BIN" build-spec --chain ./output/local-chain-spec-updated.json --disable-default-bootnode --raw > ./output/local-chain-spec-raw-2.json
 
 # echo
 # echo "[6/9] Inserting keys for Validator 1..."
 
-# "$NODE_BIN" key insert --base-path /tmp/validator1 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator1 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Sr25519 \
 #   --suri "$V1_SEED//babe" \
 #   --key-type babe
-# "$NODE_BIN" key insert --base-path /tmp/validator1 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator1 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Ed25519 \
 #   --suri "$V1_SEED//grandpa" \
 #   --key-type gran
-# "$NODE_BIN" key insert --base-path /tmp/validator1 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator1 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Sr25519 \
 #   --suri "$V1_SEED//im_online" \
 #   --key-type imon
-# "$NODE_BIN" key insert --base-path /tmp/validator1 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator1 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Sr25519 \
 #   --suri "$V1_SEED//authority_discovery" \
 #   --key-type audi
@@ -158,23 +159,23 @@ jq ".genesis.runtimeGenesis.patch.staking.stakers = [[\"$V1_ADDR\", \"$V1_ADDR\"
 # echo
 # echo "[7/9] Inserting keys for Validator 2..."
 
-# "$NODE_BIN" key insert --base-path /tmp/validator2 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator2 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Sr25519 \
 #   --suri "$V2_SEED//babe" \
 #   --key-type babe
-# "$NODE_BIN" key insert --base-path /tmp/validator2 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator2 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Ed25519 \
 #   --suri "$V2_SEED//grandpa" \
 #   --key-type gran
-# "$NODE_BIN" key insert --base-path /tmp/validator2 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator2 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Sr25519 \
 #   --suri "$V2_SEED//im_online" \
 #   --key-type imon
-# "$NODE_BIN" key insert --base-path /tmp/validator2 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator2 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Sr25519 \
 #   --suri "$V2_SEED//authority_discovery" \
 #   --key-type audi
@@ -182,23 +183,23 @@ jq ".genesis.runtimeGenesis.patch.staking.stakers = [[\"$V1_ADDR\", \"$V1_ADDR\"
 # echo
 # echo "[8/9] Inserting keys for Validator 3..."
 
-# "$NODE_BIN" key insert --base-path /tmp/validator3 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator3 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Sr25519 \
 #   --suri "$V3_SEED//babe" \
 #   --key-type babe
-# "$NODE_BIN" key insert --base-path /tmp/validator3 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator3 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Ed25519 \
 #   --suri "$V3_SEED//grandpa" \
 #   --key-type gran
-# "$NODE_BIN" key insert --base-path /tmp/validator3 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator3 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Sr25519 \
 #   --suri "$V3_SEED//im_online" \
 #   --key-type imon
-# "$NODE_BIN" key insert --base-path /tmp/validator3 \
-#   --chain=/tmp/local-chain-spec-raw-2.json \
+# "$NODE_BIN" key insert --base-path ./output/validator3 \
+#   --chain=./output/local-chain-spec-raw-2.json \
 #   --scheme Sr25519 \
 #   --suri "$V3_SEED//authority_discovery" \
 #   --key-type audi
@@ -206,8 +207,8 @@ jq ".genesis.runtimeGenesis.patch.staking.stakers = [[\"$V1_ADDR\", \"$V1_ADDR\"
 # echo
 echo "[9/9] Starting bootnode and validator nodes (in background)..."
 
-BOOTNODE_PEER_ID=$("$NODE_BIN" key inspect-node-key --file /tmp/bootnode_node_key.txt 2>/dev/null | tail -n1)
-echo "$BOOTNODE_PEER_ID" > /tmp/bootnode_peer_id.txt
+BOOTNODE_PEER_ID=$("$NODE_BIN" key inspect-node-key --file ./output/bootnode_node_key.txt 2>/dev/null | tail -n1)
+echo "$BOOTNODE_PEER_ID" > ./output/bootnode_peer_id.txt
 
 BOOTNODE_MULTIADDR="/ip4/127.0.0.1/tcp/30335/p2p/$BOOTNODE_PEER_ID"
 
@@ -219,8 +220,8 @@ echo
 
 # Start nodes in background (same terminal, different processes)
 "$NODE_BIN" \
-  --base-path /tmp/bootnode \
-  --chain /tmp/local-chain-spec-raw-2.json \
+  --base-path ./output/bootnode \
+  --chain ./output/local-chain-spec-raw-2.json \
   --port 30335 \
-  --node-key-file /tmp/bootnode_node_key.txt \
+  --node-key-file ./output/bootnode_node_key.txt \
   --name Bootnode 
