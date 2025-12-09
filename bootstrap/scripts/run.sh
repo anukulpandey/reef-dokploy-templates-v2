@@ -44,6 +44,7 @@ echo "➡️  HTTP server PID: $HTTP_PID"
 # ---------------------------------------------------------
 echo "🔑 Generating bootnode key..."
 reef-node key generate-node-key --chain local > /tmp/bootnode_node_key.txt
+cp /tmp/bootnode_node_key.txt /output/bootnode_node_key.txt
 
 echo "📄 Bootnode key created at /tmp/bootnode_node_key.txt:"
 cat /tmp/bootnode_node_key.txt
