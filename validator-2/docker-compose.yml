@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  validator2:
+    image: anukulpandey/reef-chain-node
+    container_name: validator2
+    working_dir: /workspace
+
+    environment:
+      SPEC_URL: ${SPEC_URL}
+      BOOTNODE_NODE_KEY: ${BOOTNODE_NODE_KEY}
+      BOOTNODE_IP: ${BOOTNODE_IP}
+      V1SEED: ${V1SEED}
+      V1ADDR: ${V1ADDR}
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    volumes:
+      - ./scripts:/workspace/scripts
+      - ./output:/output
+
+    entrypoint: /bin/sh
+    command: -c "
+      set -e;
+      apt-get update && apt-get install -y curl;
+      chmod +x /workspace/scripts/start-validator.sh;
+      exec /workspace/scripts/start-validator.sh"
