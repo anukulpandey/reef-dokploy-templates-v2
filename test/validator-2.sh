@@ -103,8 +103,8 @@ echo "🚀 Starting Validator Node (logs -> /tmp/validator2.log)..."
 exec $NODE_BIN \
   --base-path /tmp/validator2 \
   --chain /tmp/local-chain-spec-raw-2.json \
-  --port 30336 \
-  --rpc-port 9946 \
+  --port 30334 \
+  --rpc-port 9945 \
   --node-key-file /tmp/v1_node_key.txt \
   --bootnodes "$BOOTNODE_MULTIADDR" \
   --validator \
