@@ -106,10 +106,10 @@ ls -lah /output
 
 # Run the HTTP server in background
 cd /output
-python3 -m http.server 8000 &
+python3 -m http.server $PORT &
 HTTP_PID=$!
 
-echo "➡️  Download raw spec at:  http://localhost:8000/local-chain-spec-raw.json"
+echo "➡️  Download raw spec at:  http://localhost:$PORT/local-chain-spec-raw.json"
 echo "➡️  HTTP server PID: $HTTP_PID"
 
 # ---------------------------------------------------------
@@ -126,6 +126,6 @@ echo "🚀 Starting Bootnode..."
 exec reef-node \
   --base-path /tmp/bootnode \
   --chain /output/local-chain-spec-raw.json \
-  --port 30335 \
+  --port $P2P_PORT \
   --node-key-file /tmp/bootnode_node_key.txt \
   --name Bootnode

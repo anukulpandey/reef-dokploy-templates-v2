@@ -19,6 +19,9 @@ services:
       V3_ADDR: "5HTmW3wtfs6h1D44QxfLPpwVzQ3Jc7S8eiQAuDRkmqEhrwMQ"
       V3_SEED: "0xba8ad5d3607f10c356860024a08ea279dbd529f0950fa752fc6c2d59981b89e5"
 
+      PORT: 8000
+      P2P_PORT: 30335
+
     entrypoint: /bin/sh
     command: -c "
         echo '📦 Installing python3...' &&
