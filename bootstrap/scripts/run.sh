@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+mkdir /output
+
 chmod -R 777 /output
 
 echo "👉 generating plain spec"

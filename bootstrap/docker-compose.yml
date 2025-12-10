@@ -1,14 +1,15 @@
+version: "3.9"
+
 services:
-  bootnode:
+  reef-bootnode:
     image: anukulpandey/reef-chain-node
     container_name: reef-bootnode
     working_dir: /workspace
-    volumes:
-      - ./output:/output
-      - ./scripts:/workspace
+
     ports:
-      - "8000:8000"
-      - "30335:30335"
+      - 8000:8000
+      - 30335:30335
+
     environment:
       V1_ADDR: "5GH14oJ4A3VDLoC6nXutsTwS4dMwebDipNdSugD5zFnnWKp5"
       V1_SEED: "0x4beb11e380012110b0b072fbb3d8e7455921cf4658de06c33d970be82ccf9ed5"
@@ -24,13 +25,24 @@ services:
 
     entrypoint: /bin/sh
     command: -c "
-        echo '📦 Installing python3...' &&
-        apt-get update &&
-        apt-get install -y python3 &&
+      set -e &&
 
-        echo '🔧 Making scripts executable...' &&
-        chmod +x /workspace/run.sh &&
-        chmod +x /workspace/update-spec.sh &&
+      echo '📦 Installing dependencies...' &&
+      apt-get update &&
+      apt-get install -y python3 wget ca-certificates &&
 
-        echo '🚀 Running spec generator + bootnode...' &&
-        /workspace/run.sh"
+      echo '📥 Downloading bootstrap scripts...' &&
+      mkdir -p /workspace &&
+      wget -O /workspace/run.sh \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/bootstrap/scripts/run.sh &&
+      wget -O /workspace/update-spec.py \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/bootstrap/scripts/update-spec.py &&
+      wget -O /workspace/update-spec.sh \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/bootstrap/scripts/update-spec.sh &&
+
+      echo '🔧 Making scripts executable...' &&
+      chmod +x /workspace/run.sh &&
+      chmod +x /workspace/update-spec.sh &&
+
+      echo '🚀 Running spec generator + bootnode...' &&
+      /workspace/run.sh"
