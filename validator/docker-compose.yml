@@ -6,15 +6,19 @@ services:
     container_name: validator1
     working_dir: /workspace
 
+    ports:
+      - 9944:9944
+      - 30333:30333
+
     environment:
       SPEC_URL: ${SPEC_URL}
       BOOTNODE_NODE_KEY: ${BOOTNODE_NODE_KEY}
       BOOTNODE_IP: ${BOOTNODE_IP}
       V1SEED: ${V1SEED}
       V1ADDR: ${V1ADDR}
-
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      RPC_PORT: ${RPC_PORT}
+      P2P_PORT: ${P2P_PORT}
+      VALIDATOR_NAME: ${VALIDATOR_NAME}
 
     volumes:
       - ./scripts:/workspace/scripts

@@ -98,12 +98,12 @@ echo "🚀 Starting Validator Node (logs -> /tmp/validator1.log)..."
 exec $NODE_BIN \
   --base-path /tmp/validator1 \
   --chain /tmp/local-chain-spec-raw.json \
-  --port 30333 \
-  --rpc-port 9944 \
+  --port $P2P_PORT \
+  --rpc-port $RPC_PORT \
   --node-key-file /tmp/v1_node_key.txt \
   --bootnodes "$BOOTNODE_MULTIADDR" \
   --validator \
   --rpc-cors all \
   --rpc-external \
   --rpc-methods Unsafe \
-  --name Validator1Node
+  --name $VALIDATOR_NAME
