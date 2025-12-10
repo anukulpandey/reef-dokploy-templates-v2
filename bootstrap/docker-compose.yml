@@ -6,6 +6,9 @@ services:
     container_name: reef-bootnode
     working_dir: /workspace
 
+    volumes:
+      - ./output:/output
+
     ports:
       - 8000:8000
       - 30335:30335
