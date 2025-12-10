@@ -11,10 +11,12 @@ echo "  BOOTNODE_NODE_KEY: $BOOTNODE_NODE_KEY"
 echo "========================================"
 echo
 
-curl -fsSL "$SPEC_URL" -o /tmp/local-chain-spec-raw.json \
+# Download spec
+wget -q -O /tmp/local-chain-spec-raw.json "$SPEC_URL" \
   || { echo "ERROR: failed to download SPEC_URL ($SPEC_URL)"; exit 1; }
 
-curl -fsSL "$BOOTNODE_NODE_KEY" -o /tmp/bootnode_node_key.txt \
+# Download bootnode key
+wget -q -O /tmp/bootnode_node_key.txt "$BOOTNODE_NODE_KEY" \
   || { echo "ERROR: failed to download BOOTNODE_NODE_KEY ($BOOTNODE_NODE_KEY)"; exit 1; }
 
 echo
@@ -46,13 +48,15 @@ fi
 
 # method 3: try generic 'key inspect' JSON output
 if [ -z "$BOOTNODE_PEER_ID" ] && command -v $NODE_BIN >/dev/null 2>&1; then
-  BOOTNODE_PEER_ID=$($NODE_BIN key inspect --file /tmp/bootnode_node_key.txt 2>/dev/null | grep -o '"peerId":[[:space:]]*"[^"]*"' | sed -E 's/.*"([^"]*)".*/\1/' || true)
+  BOOTNODE_PEER_ID=$($NODE_BIN key inspect --file /tmp/bootnode_node_key.txt 2>/dev/null \
+    | grep -o '"peerId":[[:space:]]*"[^"]*"' \
+    | sed -E 's/.*"([^"]*)".*/\1/' || true)
 fi
 
 # method 4: if the file *is* just a peer id or some raw string, try reading it
 if [ -z "$BOOTNODE_PEER_ID" ]; then
   maybe=$(tr -d '\r\n' < /tmp/bootnode_node_key.txt || true)
-  # basic sanity: Peer IDs are usually long base58 strings (use length check)
+  # basic sanity: Peer IDs are usually long base58 strings
   if [ -n "$maybe" ] && [ ${#maybe} -gt 20 ]; then
     BOOTNODE_PEER_ID="$maybe"
   fi
@@ -87,7 +91,6 @@ $NODE_BIN key insert --base-path /tmp/validator1 --chain /tmp/local-chain-spec-r
 $NODE_BIN key insert --base-path /tmp/validator1 --chain /tmp/local-chain-spec-raw.json \
   --scheme Sr25519 --suri "$V1SEED//authority_discovery" --key-type audi
 
-# create validator node key (this writes a node-key file)
 echo "🔑 Generating validator node key..."
 $NODE_BIN key generate-node-key --chain local > /tmp/v1_node_key.txt
 chmod 600 /tmp/v1_node_key.txt
