@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  reef-spec-api:
+    image: anukulpandey/reef-chain-node
+    container_name: reef-spec-api
+    working_dir: /workspace
+
+    volumes:
+      - ./api:/workspace
+      - ./scripts:/workspace/scripts
+      - ./output:/output
+
+    ports:
+      - "8000:8000"
+
+    entrypoint: /bin/sh
+    command: -c "
+      set -e &&
+      apt-get update &&
+      apt-get install -y python3 python3-pip wget ca-certificates jq &&
+
+      pip3 install flask &&
+
+      chmod +x /workspace/scripts/update-spec.sh &&
+
+      python3 /workspace/api.py"
