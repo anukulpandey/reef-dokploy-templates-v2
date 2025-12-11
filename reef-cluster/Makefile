@@ -192,5 +192,5 @@ run-local:
 		echo "Logs in /tmp/*.log"; \
 		echo ""; \
 		echo "📌 Container will now stay alive (tail -f /dev/null)"; \
-		tail -f /dev/null; \
+		tail -F /tmp/bootnode.log /tmp/validator1.log /tmp/validator2.log /tmp/validator3.log \
 	'
