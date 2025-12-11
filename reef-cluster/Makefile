@@ -190,4 +190,7 @@ run-local:
 		echo "Validator2: ws://127.0.0.1:9945"; \
 		echo "Validator3: ws://127.0.0.1:9946"; \
 		echo "Logs in /tmp/*.log"; \
+		echo ""; \
+		echo "📌 Container will now stay alive (tail -f /dev/null)"; \
+		tail -f /dev/null; \
 	'

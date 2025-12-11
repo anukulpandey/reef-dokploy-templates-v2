@@ -22,7 +22,7 @@ services:
 
       echo '📦 Installing make...' &&
       apt-get update &&
-      apt-get install -y make wget &&
+      apt-get install -y make wget curl jq&&
 
       echo '🔧 Preparing fake build output...' &&
       mkdir -p target/release &&
