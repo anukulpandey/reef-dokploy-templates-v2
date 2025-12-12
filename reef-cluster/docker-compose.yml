@@ -13,6 +13,9 @@ services:
       v2addr: "5CmKswtRQGFrt3CcP5waJVxgEJfRy1xsmwPLRPWkumLBz8nv"
       v3addr: "5HTmW3wtfs6h1D44QxfLPpwVzQ3Jc7S8eiQAuDRkmqEhrwMQ"
 
+      specgenurl: "http://reef.host:8000"
+
+
     volumes:
       - ./:/workspace
 

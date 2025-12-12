@@ -106,7 +106,7 @@ run-local:
 	@echo "\n[3/7] Calling API to generate RAW spec…"
 
 	@curl -s \
-	"http://reef.host:8000/generate?v1addr=$$(cat /tmp/v1_addr.txt)&v1seed=$$(cat /tmp/v1_seed.txt)&v2addr=$$(cat /tmp/v2_addr.txt)&v2seed=$$(cat /tmp/v2_seed.txt)&v3addr=$$(cat /tmp/v3_addr.txt)&v3seed=$$(cat /tmp/v3_seed.txt)" \
+	"$$specgenurl/generate?v1addr=$$(cat /tmp/v1_addr.txt)&v1seed=$$(cat /tmp/v1_seed.txt)&v2addr=$$(cat /tmp/v2_addr.txt)&v2seed=$$(cat /tmp/v2_seed.txt)&v3addr=$$(cat /tmp/v3_addr.txt)&v3seed=$$(cat /tmp/v3_seed.txt)" \
 	> /tmp/gen.json || { echo "❌ API call failed"; exit 1; }
 
 	@echo "API Response:"
