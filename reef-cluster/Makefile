@@ -29,7 +29,6 @@ test:
 	SKIP_WASM_BUILD=1 cargo test --features with-ethereum-compatibility --all
 	SKIP_WASM_BUILD=1 cargo test --all
 
-
 .PHONY: test-print
 test-print:
 	SKIP_WASM_BUILD=1 cargo test --features with-ethereum-compatibility --all -- --nocapture
@@ -87,15 +86,22 @@ run-local:
 	@rm -rf /tmp/validator1 /tmp/validator2 /tmp/validator3 /tmp/bootnode \
 	/tmp/*.txt /tmp/local-chain-spec-raw.json
 
-	@echo "\n[2/7] Writing STATIC validator seeds + addresses..."
+	@echo "\n[2/7] Writing validator seeds + addresses from ENV..."
 
-	@echo "0x4beb11e380012110b0b072fbb3d8e7455921cf4658de06c33d970be82ccf9ed5" > /tmp/v1_seed.txt
-	@echo "0x3348e15287dae612d9c8f008a468ff6c229a55c4b58d778f389cc03134e3efbe" > /tmp/v2_seed.txt
-	@echo "0xba8ad5d3607f10c356860024a08ea279dbd529f0950fa752fc6c2d59981b89e5" > /tmp/v3_seed.txt
+	@if [ -z "$$v1sec" ] || [ -z "$$v2sec" ] || [ -z "$$v3sec" ] || \
+	     [ -z "$$v1addr" ] || [ -z "$$v2addr" ] || [ -z "$$v3addr" ]; then \
+		echo "❌ ERROR: Missing one or more required ENV variables:"; \
+		echo "   v1sec v2sec v3sec v1addr v2addr v3addr"; \
+		exit 1; \
+	fi
 
-	@echo "5GH14oJ4A3VDLoC6nXutsTwS4dMwebDipNdSugD5zFnnWKp5" > /tmp/v1_addr.txt
-	@echo "5CmKswtRQGFrt3CcP5waJVxgEJfRy1xsmwPLRPWkumLBz8nv" > /tmp/v2_addr.txt
-	@echo "5HTmW3wtfs6h1D44QxfLPpwVzQ3Jc7S8eiQAuDRkmqEhrwMQ" > /tmp/v3_addr.txt
+	@echo "$$v1sec"  > /tmp/v1_seed.txt
+	@echo "$$v2sec"  > /tmp/v2_seed.txt
+	@echo "$$v3sec"  > /tmp/v3_seed.txt
+
+	@echo "$$v1addr" > /tmp/v1_addr.txt
+	@echo "$$v2addr" > /tmp/v2_addr.txt
+	@echo "$$v3addr" > /tmp/v3_addr.txt
 
 	@echo "\n[3/7] Calling API to generate RAW spec…"
 
@@ -130,14 +136,11 @@ run-local:
 
 	@echo "✅ RAW spec downloaded"
 
-
-
 	@echo "\n[6/7] Generating node keys…"
 	@./target/release/reef-node key generate-node-key --chain local > /tmp/bootnode_node_key.txt
 	@./target/release/reef-node key generate-node-key --chain local > /tmp/v1_node_key.txt
 	@./target/release/reef-node key generate-node-key --chain local > /tmp/v2_node_key.txt
 	@./target/release/reef-node key generate-node-key --chain local > /tmp/v3_node_key.txt
-
 
 	@echo "\n[7/7] Inserting session keys…"
 
@@ -164,7 +167,6 @@ run-local:
 		./target/release/reef-node key insert --base-path /tmp/validator3 --chain /tmp/local-chain-spec-raw.json --scheme Sr25519 --suri "$$V3_SEED//im_online" --key-type imon; \
 		./target/release/reef-node key insert --base-path /tmp/validator3 --chain /tmp/local-chain-spec-raw.json --scheme Sr25519 --suri "$$V3_SEED//authority_discovery" --key-type audi; \
 	'
-
 
 	@echo "\n=========================================="
 	@echo "Starting bootnode + validators (background)"
