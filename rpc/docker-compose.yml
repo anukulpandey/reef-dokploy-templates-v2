@@ -8,7 +8,7 @@ services:
 
     ports:
       - 9949:9949
-      - 30333:30333
+      - 30339:30339
 
     environment:
       SPEC_URL: ${SPEC_URL}
@@ -27,6 +27,6 @@ services:
     entrypoint: /bin/sh
     command: -c "
       set -e;
-      apt-get update && apt-get install -y curl;
+      apt-get update && apt-get install -y curl wget;
       chmod +x /workspace/scripts/start-rpc.sh;
       exec /workspace/scripts/start-rpc.sh"

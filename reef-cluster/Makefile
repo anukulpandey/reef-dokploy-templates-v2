@@ -192,7 +192,8 @@ run-local:
 		BOOTNODE_ADDR="/ip4/127.0.0.1/tcp/30335/p2p/$$BOOTNODE_PEER_ID"; \
 		echo "Bootnode PeerId = $$BOOTNODE_PEER_ID"; \
 		\
-		./target/release/reef-node --base-path /tmp/bootnode --chain /tmp/local-chain-spec-raw.json --port 30335 --node-key-file /tmp/bootnode_node_key.txt --name Bootnode > /tmp/bootnode.log 2>&1 & \
+		./target/release/reef-node --base-path /tmp/bootnode --chain /tmp/local-chain-spec-raw.json --port 30335 --listen-addr /ip4/0.0.0.0/tcp/30335
+		--node-key-file /tmp/bootnode_node_key.txt --name Bootnode > /tmp/bootnode.log 2>&1 & \
 		\
 		./target/release/reef-node --base-path /tmp/validator1 --chain /tmp/local-chain-spec-raw.json --port 30333 --node-key-file /tmp/v1_node_key.txt --bootnodes $$BOOTNODE_ADDR --validator --rpc-external --rpc-cors all --rpc-methods Unsafe --name Validator1 > /tmp/validator1.log 2>&1 & \
 		\

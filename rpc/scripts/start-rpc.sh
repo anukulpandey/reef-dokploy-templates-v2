@@ -18,22 +18,16 @@ wget -q -O /tmp/bootnode_node_key.txt "$BOOTNODE_NODE_KEY" \
   || { echo "ERROR: failed to download BOOTNODE_NODE_KEY ($BOOTNODE_NODE_KEY)"; exit 1; }
 
 echo "🔍 Extracting Bootnode Peer ID..."
+ls -la /tmp
 
-BOOTNODE_PEER_ID=""
-
-if command -v $NODE_BIN >/dev/null 2>&1; then
-  BOOTNODE_PEER_ID=$(
-    $NODE_BIN key inspect-node-key --file /tmp/bootnode_node_key.txt 2>/dev/null \
-    | awk '/Peer ID/ {print $3}' || true
-  )
-fi
+BOOTNODE_PEER_ID=$(tr -d '\r\n' < /tmp/bootnode_node_key.txt)
 
 if [ -z "$BOOTNODE_PEER_ID" ]; then
   echo "❌ Could not extract BOOTNODE_PEER_ID"
   exit 1
 fi
 
-BOOTNODE_MULTIADDR="/ip4/$BOOTNODE_IP/tcp/30335/p2p/$BOOTNODE_PEER_ID"
+BOOTNODE_MULTIADDR="/dns4/host.docker.internal/tcp/30335/p2p/$BOOTNODE_PEER_ID"
 
 echo "✅ BOOTNODE_MULTIADDR = $BOOTNODE_MULTIADDR"
 echo
@@ -61,4 +55,4 @@ exec $NODE_BIN \
   --rpc-port $RPC_PORT \
   --rpc-cors all \
   --rpc-methods unsafe \
-  --name "$NODE_NAME"
+  --name "rpc-node"
