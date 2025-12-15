@@ -179,18 +179,15 @@ run-local:
 		\
 		./target/release/reef-node --base-path /tmp/bootnode --chain /tmp/local-chain-spec-raw.json --port 30335 --node-key-file /tmp/bootnode_node_key.txt --name Bootnode > /tmp/bootnode.log 2>&1 & \
 		\
-		./target/release/reef-node --base-path /tmp/validator1 --chain /tmp/local-chain-spec-raw.json --port 30333 --rpc-port 9944 --node-key-file /tmp/v1_node_key.txt --bootnodes $$BOOTNODE_ADDR --validator --rpc-external --rpc-cors all --rpc-methods Unsafe --name Validator1 > /tmp/validator1.log 2>&1 & \
+		./target/release/reef-node --base-path /tmp/validator1 --chain /tmp/local-chain-spec-raw.json --port 30333 --node-key-file /tmp/v1_node_key.txt --bootnodes $$BOOTNODE_ADDR --validator --rpc-external --rpc-cors all --rpc-methods Unsafe --name Validator1 > /tmp/validator1.log 2>&1 & \
 		\
-		./target/release/reef-node --base-path /tmp/validator2 --chain /tmp/local-chain-spec-raw.json --port 30334 --rpc-port 9945 --node-key-file /tmp/v2_node_key.txt --bootnodes $$BOOTNODE_ADDR --validator --rpc-external --rpc-cors all --rpc-methods Unsafe --name Validator2 > /tmp/validator2.log 2>&1 & \
+		./target/release/reef-node --base-path /tmp/validator2 --chain /tmp/local-chain-spec-raw.json --port 30334 --node-key-file /tmp/v2_node_key.txt --bootnodes $$BOOTNODE_ADDR --validator --rpc-external --rpc-cors all --rpc-methods Unsafe --name Validator2 > /tmp/validator2.log 2>&1 & \
 		\
-		./target/release/reef-node --base-path /tmp/validator3 --chain /tmp/local-chain-spec-raw.json --port 30336 --rpc-port 9946 --node-key-file /tmp/v3_node_key.txt --bootnodes $$BOOTNODE_ADDR --validator --rpc-external --rpc-cors all --rpc-methods Unsafe --name Validator3 > /tmp/validator3.log 2>&1 & \
+		./target/release/reef-node --base-path /tmp/validator3 --chain /tmp/local-chain-spec-raw.json --port 30336 --node-key-file /tmp/v3_node_key.txt --bootnodes $$BOOTNODE_ADDR --validator --rpc-external --rpc-cors all --rpc-methods Unsafe --name Validator3 > /tmp/validator3.log 2>&1 & \
 		\
 		echo ""; \
 		echo "🚀 Network running!"; \
 		echo "Bootnode:   $$BOOTNODE_ADDR"; \
-		echo "Validator1: ws://127.0.0.1:9944"; \
-		echo "Validator2: ws://127.0.0.1:9945"; \
-		echo "Validator3: ws://127.0.0.1:9946"; \
 		echo "Logs in /tmp/*.log"; \
 		echo ""; \
 		echo "📌 Container will now stay alive (tail -f /dev/null)"; \
