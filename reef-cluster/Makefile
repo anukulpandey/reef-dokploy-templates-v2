@@ -188,7 +188,7 @@ run-local:
 	@echo "=========================================="
 
 	@bash -c '\
-		BOOTNODE_PEER_ID=$$(tr -d "\r\n" < /tmp/bootnode_node_key.txt); \
+		BOOTNODE_PEER_ID=$$(tr -d "\r\n" < /workspace/download/bootnode_node_key.txt); \
 		BOOTNODE_ADDR="/ip4/127.0.0.1/tcp/30335/p2p/$$BOOTNODE_PEER_ID"; \
 		echo "Bootnode PeerId = $$BOOTNODE_PEER_ID"; \
 		\
