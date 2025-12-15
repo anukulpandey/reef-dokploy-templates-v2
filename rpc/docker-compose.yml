@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  validator1:
+    image: anukulpandey/reef-chain-node
+    container_name: validator1
+    working_dir: /workspace
+
+    ports:
+      - 9949:9949
+      - 30333:30333
+
+    environment:
+      SPEC_URL: ${SPEC_URL}
+      BOOTNODE_NODE_KEY: ${BOOTNODE_NODE_KEY}
+      BOOTNODE_IP: ${BOOTNODE_IP}
+      V1SEED: ${V1SEED}
+      V1ADDR: ${V1ADDR}
+      P2P_PORT: ${P2P_PORT}
+      RPC_PORT: ${P2P_PORT}
+      VALIDATOR_NAME: ${VALIDATOR_NAME}
+
+    volumes:
+      - ./scripts:/workspace/scripts
+      - ./output:/output
+
+    entrypoint: /bin/sh
+    command: -c "
+      set -e;
+      apt-get update && apt-get install -y curl;
+      chmod +x /workspace/scripts/start-rpc.sh;
+      exec /workspace/scripts/start-rpc.sh"
