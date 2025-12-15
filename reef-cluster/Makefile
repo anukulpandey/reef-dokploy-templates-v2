@@ -136,6 +136,9 @@ run-local:
 
 	@echo "✅ RAW spec downloaded"
 
+	@echo "\n[5.5/7] Exposing RAW spec via HTTP (port 8000)…"
+	@nohup python3 -m http.server 84369 --directory /tmp > /tmp/spec-server.log 2>&1 &
+
 	@echo "\n[6/7] Generating node keys…"
 	@./target/release/reef-node key generate-node-key --chain local > /tmp/bootnode_node_key.txt
 	@./target/release/reef-node key generate-node-key --chain local > /tmp/v1_node_key.txt
