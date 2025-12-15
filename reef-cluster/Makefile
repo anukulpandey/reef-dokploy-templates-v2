@@ -84,7 +84,9 @@ run-local:
 
 	@echo "\n[1/7] Cleaning old data..."
 	@rm -rf /tmp/validator1 /tmp/validator2 /tmp/validator3 /tmp/bootnode \
-	/tmp/*.txt /tmp/local-chain-spec-raw.json
+	/tmp/*.txt /tmp/local-chain-spec-raw.json /workspace/download
+
+	@mkdir -p /workspace/download
 
 	@echo "\n[2/7] Writing validator seeds + addresses from ENV..."
 
@@ -136,9 +138,16 @@ run-local:
 
 	@echo "✅ RAW spec downloaded"
 
+	@cp /tmp/local-chain-spec-raw.json /workspace/download/local-chain-spec-raw.json
+	@echo "✅ RAW spec copied to /workspace/download/"
+
+
 	@echo "\n[5.5/7] Exposing RAW spec via HTTP (port 8001)…"
-	@nohup python3 -m http.server 8001 --bind 0.0.0.0 --directory /tmp > /tmp/spec-server.log 2>&1 &
-	@echo "✅ Spec server running in background (logs in /tmp/spec-server.log)"
+	@nohup python3 -m http.server 8001 \
+	--bind 0.0.0.0 \
+	--directory /workspace/download \
+	> /workspace/download/spec-server.log 2>&1 &
+	@echo "✅ Spec server running at http://0.0.0.0:8001/local-chain-spec-raw.json"
 
 	@echo "\n[6/7] Generating node keys…"
 	@./target/release/reef-node key generate-node-key --chain local > /tmp/bootnode_node_key.txt
