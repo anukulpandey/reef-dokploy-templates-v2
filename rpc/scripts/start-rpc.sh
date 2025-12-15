@@ -27,7 +27,7 @@ if [ -z "$BOOTNODE_PEER_ID" ]; then
   exit 1
 fi
 
-BOOTNODE_MULTIADDR="/dns4/host.docker.internal/tcp/30335/p2p/$BOOTNODE_PEER_ID"
+BOOTNODE_MULTIADDR="/ip4/$BOOTNODE_IP/tcp/30335/p2p/$BOOTNODE_PEER_ID"
 
 echo "✅ BOOTNODE_MULTIADDR = $BOOTNODE_MULTIADDR"
 echo
