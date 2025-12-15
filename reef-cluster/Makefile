@@ -136,8 +136,8 @@ run-local:
 
 	@echo "✅ RAW spec downloaded"
 
-	@echo "\n[5.5/7] Exposing RAW spec via HTTP (port 8000)…"
-	@nohup python3 -m http.server 8000 --bind 0.0.0.0 --directory /tmp > /tmp/spec-server.log 2>&1 &
+	@echo "\n[5.5/7] Exposing RAW spec via HTTP (port 8001)…"
+	@nohup python3 -m http.server 8001 --bind 0.0.0.0 --directory /tmp > /tmp/spec-server.log 2>&1 &
 	@echo "✅ Spec server running in background (logs in /tmp/spec-server.log)"
 
 	@echo "\n[6/7] Generating node keys…"
