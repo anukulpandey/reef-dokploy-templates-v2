@@ -155,6 +155,8 @@ run-local:
 	@./target/release/reef-node key generate-node-key --chain local > /tmp/v2_node_key.txt
 	@./target/release/reef-node key generate-node-key --chain local > /tmp/v3_node_key.txt
 
+	@cp /tmp/bootnode_node_key.txt /workspace/download/bootnode_node_key.txt
+
 	@echo "\n[7/7] Inserting session keys…"
 
 	@bash -c '\

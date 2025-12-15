@@ -35,7 +35,7 @@ services:
 
       echo '📦 Installing required tools...' &&
       apt-get update &&
-      apt-get install -y make wget curl jq &&
+      apt-get install -y make wget curl jq python3 &&
 
       echo '📥 Downloading Makefile...' &&
       wget -q -O /workspace/Makefile \
