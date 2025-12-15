@@ -188,26 +188,69 @@ run-local:
 	@echo "=========================================="
 
 	@bash -c '\
-		BOOTNODE_PEER_ID=$$(./target/release/reef-node key inspect-node-key --file /tmp/bootnode_node_key.txt | awk "{print \$$NF}"); \
+		BOOTNODE_PEER_ID=$$(tr -d "\r\n" < /tmp/bootnode_node_key.txt); \
 		BOOTNODE_ADDR="/ip4/127.0.0.1/tcp/30335/p2p/$$BOOTNODE_PEER_ID"; \
 		echo "Bootnode PeerId = $$BOOTNODE_PEER_ID"; \
 		\
-		./target/release/reef-node --base-path /tmp/bootnode --chain /tmp/local-chain-spec-raw.json --port 30335 --listen-addr /ip4/0.0.0.0/tcp/30335
-		--node-key-file /tmp/bootnode_node_key.txt --name Bootnode > /tmp/bootnode.log 2>&1 & \
+		./target/release/reef-node \
+		--base-path /tmp/bootnode \
+		--chain /tmp/local-chain-spec-raw.json \
+		--listen-addr /ip4/0.0.0.0/tcp/30335 \
+		--node-key-file /tmp/bootnode_node_key.txt \
+		--name Bootnode \
+		> /tmp/bootnode.log 2>&1 & \
 		\
-		./target/release/reef-node --base-path /tmp/validator1 --chain /tmp/local-chain-spec-raw.json --port 30333 --node-key-file /tmp/v1_node_key.txt --bootnodes $$BOOTNODE_ADDR --validator --rpc-external --rpc-cors all --rpc-methods Unsafe --name Validator1 > /tmp/validator1.log 2>&1 & \
+		./target/release/reef-node \
+		--base-path /tmp/validator1 \
+		--chain /tmp/local-chain-spec-raw.json \
+		--port 30333 \
+		--node-key-file /tmp/v1_node_key.txt \
+		--bootnodes $$BOOTNODE_ADDR \
+		--validator \
+		--rpc-external --rpc-cors all --rpc-methods Unsafe \
+		--name Validator1 \
+		> /tmp/validator1.log 2>&1 & \
 		\
-		./target/release/reef-node --base-path /tmp/validator2 --chain /tmp/local-chain-spec-raw.json --port 30334 --node-key-file /tmp/v2_node_key.txt --bootnodes $$BOOTNODE_ADDR --validator --rpc-external --rpc-cors all --rpc-methods Unsafe --name Validator2 > /tmp/validator2.log 2>&1 & \
+		./target/release/reef-node \
+		--base-path /tmp/validator2 \
+		--chain /tmp/local-chain-spec-raw.json \
+		--port 30334 \
+		--node-key-file /tmp/v2_node_key.txt \
+		--bootnodes $$BOOTNODE_ADDR \
+		--validator \
+		--rpc-external --rpc-cors all --rpc-methods Unsafe \
+		--name Validator2 \
+		> /tmp/validator2.log 2>&1 & \
 		\
-		./target/release/reef-node --base-path /tmp/validator3 --chain /tmp/local-chain-spec-raw.json --port 30336 --node-key-file /tmp/v3_node_key.txt --bootnodes $$BOOTNODE_ADDR --validator --rpc-external --rpc-cors all --rpc-methods Unsafe --name Validator3 > /tmp/validator3.log 2>&1 & \
+		./target/release/reef-node \
+		--base-path /tmp/validator3 \
+		--chain /tmp/local-chain-spec-raw.json \
+		--port 30336 \
+		--node-key-file /tmp/v3_node_key.txt \
+		--bootnodes $$BOOTNODE_ADDR \
+		--validator \
+		--rpc-external --rpc-cors all --rpc-methods Unsafe \
+		--name Validator3 \
+		> /tmp/validator3.log 2>&1 & \
 		\
-		./target/release/reef-node --base-path /tmp/rpc-node --chain /tmp/local-chain-spec-raw.json --port 30337 --bootnodes $$BOOTNODE_ADDR  --rpc-port 9944 --rpc-external --rpc-cors all --rpc-methods Unsafe --name rpcNode > /tmp/rpc-node.log 2>&1 & \
+		./target/release/reef-node \
+		--base-path /tmp/rpc-node \
+		--chain /tmp/local-chain-spec-raw.json \
+		--port 30337 \
+		--bootnodes $$BOOTNODE_ADDR \
+		--rpc-external \
+		--rpc-cors all \
+		--rpc-methods Unsafe \
+		--rpc-port 9944 \
+		--name rpc-node \
+		> /tmp/rpc-node.log 2>&1 & \
 		\
 		echo ""; \
 		echo "🚀 Network running!"; \
 		echo "Bootnode:   $$BOOTNODE_ADDR"; \
+		echo "RPC Node:  http://127.0.0.1:9944"; \
 		echo "Logs in /tmp/*.log"; \
 		echo ""; \
-		echo "📌 Container will now stay alive (tail -f /dev/null)"; \
 		tail -F /tmp/bootnode.log /tmp/validator1.log /tmp/validator2.log /tmp/validator3.log /tmp/rpc-node.log \
-	'
+		'
+
